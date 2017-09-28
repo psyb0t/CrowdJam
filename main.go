@@ -1,8 +1,8 @@
 package main
 
 import (
-	item_handlers "CrowdJam/handlers/items"
-	room_handlers "CrowdJam/handlers/rooms"
+	item_handlers "CrowdJam/handlers/item"
+	room_handlers "CrowdJam/handlers/room"
 	"CrowdJam/middleware"
 
 	"github.com/psyb0t/simplehttp"
@@ -35,9 +35,14 @@ func main() {
 	// End rooms route group
 
 	// Room items route group
-	service.AddRouteGroup("/rooms/:room_id",
+	service.AddRouteGroup("/rooms/:room_id/items",
 		simplehttp.NewRouteGroupItem(
-			"", "POST", item_handlers.CreateItem, nil,
+			"", "GET", room_handlers.GetRoomItems, nil,
+		),
+
+		simplehttp.NewRouteGroupItem(
+			"", "POST", item_handlers.CreateItem,
+			middleware.CleanupInput,
 		),
 
 		simplehttp.NewRouteGroupItem(
@@ -45,7 +50,8 @@ func main() {
 		),
 
 		simplehttp.NewRouteGroupItem(
-			"/:item_id", "PUT", item_handlers.UpdateItem, nil,
+			"/:item_id", "PUT", item_handlers.UpdateItem,
+			middleware.CleanupInput,
 		),
 
 		// Add queue system in the db neaparat

@@ -1,7 +1,7 @@
-package items
+package item
 
 import "github.com/psyb0t/simplehttp"
 
-func DeleteItem(r *simplehttp.Route) {
+func UpdateItem(r *simplehttp.Route) {
 	r.SuccessResponse()
 }

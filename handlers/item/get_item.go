@@ -1,7 +1,7 @@
-package items
+package item
 
 import "github.com/psyb0t/simplehttp"
 
-func VoteItem(r *simplehttp.Route) {
+func GetItem(r *simplehttp.Route) {
 	r.SuccessResponse()
 }

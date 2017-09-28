@@ -14,6 +14,7 @@ func CleanupInput(r *simplehttp.Route) {
 	}
 
 	delete(m, "id")
+	delete(m, "items")
 
 	result_input, err := json.Marshal(m)
 	if err != nil {

@@ -5,23 +5,70 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"CrowdJam/collections"
+	"CrowdJam/events"
 	"github.com/psyb0t/simplehttp"
+	"log"
 )
 
 type Room struct {
-	ID          string  `json:"id""`
-	Name        string  `json:"name""`
-	Items       []*Item `json:"items""`
+	ID          string            `json:"id""`
+	Name        string            `json:"name""`
+	Items       collections.Items `json:"items""`
 	db          *simplehttp.DB
 	dbKeyPrefix string
 }
 
 func NewRoom(db *simplehttp.DB) *Room {
-	return &Room{db: db, dbKeyPrefix: "room_"}
+	room := &Room{db: db, dbKeyPrefix: "room_"}
+	room.InitEventListeners()
+
+	return room
 }
 
-func (r *Room) SetId(roomID string) {
-	r.ID = roomID
+func (r *Room) InitEventListeners() {
+	items := r.Items
+
+	eventListener := events.NewEventListener()
+
+	eventListener.On(
+		func() bool {
+			if len(items) != len(r.Items) {
+				items = r.Items
+				return true
+			}
+
+			return false
+		},
+	).Trigger("RoomItemsNumberChanged").HandledBy(
+		func(ev *events.Event) {
+			log.Println(ev.Name)
+		},
+	)
+
+	eventListener = events.NewEventListener()
+
+	eventListener.On(
+		func() bool {
+			for i, v := range items {
+				if v != r.Items[i] {
+					items = r.Items
+					return true
+				}
+			}
+
+			return false
+		},
+	).Trigger("RoomItemsValueChanged").HandledBy(
+		func(ev *events.Event) {
+			log.Println(ev.Name)
+		},
+	)
+
+}
+
+func (r *Room) SetId(id string) {
+	r.ID = id
 }
 
 func (r *Room) dbId() string {
