@@ -8,7 +8,7 @@ import (
 // Deletes a room
 func DeleteRoom(r *simplehttp.Route) {
 	room := models.NewRoom(r.Service.DB)
-	room.SetId(r.Params.ByName("id"))
+	room.SetId(r.Params.ByName("room_id"))
 
 	err := room.Delete()
 	if err != nil {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	item_handlers "CrowdJam/handlers/rooms"
+	item_handlers "CrowdJam/handlers/items"
 	room_handlers "CrowdJam/handlers/rooms"
 	"CrowdJam/middleware"
 
@@ -20,42 +20,42 @@ func main() {
 		),
 
 		simplehttp.NewRouteGroupItem(
-			"/:id", "GET", room_handlers.GetRoom,
+			"/:room_id", "GET", room_handlers.GetRoom,
 		),
 
 		simplehttp.NewRouteGroupItem(
-			"/:id", "PUT", room_handlers.UpdateRoom,
+			"/:room_id", "PUT", room_handlers.UpdateRoom,
 			middleware.CleanupInput,
 		),
 
 		simplehttp.NewRouteGroupItem(
-			"/:id", "DELETE", room_handlers.DeleteRoom, nil,
+			"/:room_id", "DELETE", room_handlers.DeleteRoom, nil,
 		),
 	)
 	// End rooms route group
 
 	// Room items route group
 	service.AddRouteGroup("/rooms/:room_id",
-		//simplehttp.NewRouteGroupItem(
-		//	"", "POST", item_handlers.CreateItem, nil,
-		//),
-		//
-		//simplehttp.NewRouteGroupItem(
-		//	"/:id", "GET", item_handlers.GetItem, nil,
-		//),
-		//
-		//simplehttp.NewRouteGroupItem(
-		//	"/:id", "PUT", item_handlers.UpdateItem, nil,
-		//),
+		simplehttp.NewRouteGroupItem(
+			"", "POST", item_handlers.CreateItem, nil,
+		),
+
+		simplehttp.NewRouteGroupItem(
+			"/:item_id", "GET", item_handlers.GetItem, nil,
+		),
+
+		simplehttp.NewRouteGroupItem(
+			"/:item_id", "PUT", item_handlers.UpdateItem, nil,
+		),
 
 		// Add queue system in the db neaparat
 		simplehttp.NewRouteGroupItem(
-			"/:id/vote", "PUT", item_handlers.VoteItem, nil,
+			"/:item_id/vote", "PUT", item_handlers.VoteItem, nil,
 		),
 
-		//simplehttp.NewRouteGroupItem(
-		//	"/:id", "DELETE", item_handlers.DeleteItem, nil,
-		//),
+		simplehttp.NewRouteGroupItem(
+			"/:id", "DELETE", item_handlers.DeleteItem, nil,
+		),
 	)
 	// End room items route group
 
